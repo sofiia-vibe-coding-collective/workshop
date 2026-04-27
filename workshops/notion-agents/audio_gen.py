@@ -90,3 +90,37 @@ async def generate_sfx(prompt: str, duration_seconds: int = 5) -> bytes:
         )
         resp.raise_for_status()
         return resp.content
+
+
+async def generate_music(
+    prompt: str,
+    duration_seconds: int = 30,
+    instrumental_only: bool = False,
+) -> bytes:
+    """Compose original music from a prompt. Returns MP3 bytes.
+
+    Duration: 3-600 seconds (3s to 10 minutes). Generation is slower than
+    TTS or SFX — typically 20-60 seconds depending on length.
+    """
+    if not ELEVENLABS_API_KEY:
+        log.warning("ELEVENLABS_API_KEY not set — returning stub MP3")
+        return _PLACEHOLDER_MP3
+
+    duration_ms = max(3000, min(duration_seconds * 1000, 600000))
+
+    async with httpx.AsyncClient(timeout=240) as client:
+        resp = await client.post(
+            "https://api.elevenlabs.io/v1/music",
+            headers={
+                "xi-api-key": ELEVENLABS_API_KEY,
+                "Content-Type": "application/json",
+            },
+            json={
+                "prompt": prompt,
+                "music_length_ms": duration_ms,
+                "force_instrumental": instrumental_only,
+                "model_id": "music_v1",
+            },
+        )
+        resp.raise_for_status()
+        return resp.content

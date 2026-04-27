@@ -1,0 +1,5 @@
+# Nixpacks build config — installs ffmpeg + ffprobe alongside Python deps.
+# Needed by mixer.py for generate_narrated_track.
+
+[phases.setup]
+nixPkgs = ["python311", "ffmpeg"]
