@@ -25,7 +25,24 @@ import image_gen
 load_dotenv()
 log = logging.getLogger("workshop.mcp")
 
-PUBLIC_BASE_URL = os.environ.get("PUBLIC_BASE_URL", "http://localhost:8000").rstrip("/")
+def _resolve_public_url() -> str:
+    """Pick the right public URL.
+
+    Priority:
+      1. PUBLIC_BASE_URL (explicit override)
+      2. https://{RAILWAY_PUBLIC_DOMAIN} (auto-set by Railway)
+      3. http://localhost:8000 (local dev fallback)
+    """
+    explicit = os.environ.get("PUBLIC_BASE_URL", "").strip()
+    if explicit:
+        return explicit.rstrip("/")
+    railway_domain = os.environ.get("RAILWAY_PUBLIC_DOMAIN", "").strip()
+    if railway_domain:
+        return f"https://{railway_domain}"
+    return "http://localhost:8000"
+
+
+PUBLIC_BASE_URL = _resolve_public_url()
 STATIC_DIR = Path(__file__).parent / "static"
 STATIC_DIR.mkdir(exist_ok=True)
 

@@ -25,9 +25,19 @@ Nothing to run. The instructor hosts one shared MCP server for the whole room. J
 
 ## Self-hosting (for after the workshop)
 
-### Option 1 — Deploy to Railway (one click)
+### Option 1 — Deploy to Railway
 
-*Deploy button coming in Phase 2.*
+1. Sign up at [railway.com](https://railway.com)
+2. **New Project → Deploy from GitHub repo**
+3. Pick `vibe-coding-collective/vibecoders.global`
+4. In project **Settings → Source** set **Root Directory** to `workshops/notion-agents`
+5. In **Variables**, add:
+   - `GEMINI_API_KEY` — from [aistudio.google.com/apikey](https://aistudio.google.com/apikey)
+   - `ELEVENLABS_API_KEY` — from [elevenlabs.io](https://elevenlabs.io/app/settings/api-keys)
+6. **Settings → Networking → Generate Domain** to get a public URL
+7. Done. Your MCP endpoint is `https://your-app.up.railway.app/mcp` — paste that into Notion.
+
+The server auto-detects Railway's domain via `RAILWAY_PUBLIC_DOMAIN`, so generated files are served at the correct public URL with no extra config.
 
 ### Option 2 — Run locally
 

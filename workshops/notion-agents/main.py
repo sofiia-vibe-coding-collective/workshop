@@ -80,10 +80,10 @@ async def run() -> None:
     )
     server = uvicorn.Server(config)
 
-    public_url = os.getenv("PUBLIC_BASE_URL", f"http://localhost:{PORT}")
+    from mcp_server import PUBLIC_BASE_URL  # picks up Railway / .env / localhost
     log.info("Workshop MCP server starting on port %d", PORT)
-    log.info("Notion agents connect at: %s/mcp", public_url.rstrip("/"))
-    log.info("Generated files served at: %s/static/", public_url.rstrip("/"))
+    log.info("Notion agents connect at: %s/mcp", PUBLIC_BASE_URL)
+    log.info("Generated files served at: %s/static/", PUBLIC_BASE_URL)
 
     await server.serve()
 
